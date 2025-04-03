@@ -16,9 +16,13 @@ function formatTime(seconds) {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
   const secs = Math.round(seconds % 60);
+
+  const adjustedMins = mins + Math.floor(secs / 60);
+  const adjustedSecs = secs % 60;
+
   return hrs > 0
-    ? `${hrs}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
-    : `${mins}:${secs.toString().padStart(2, "0")}`;
+    ? `${hrs}:${adjustedMins.toString().padStart(2, "0")}:${adjustedSecs.toString().padStart(2, "0")}`
+    : `${adjustedMins}:${adjustedSecs.toString().padStart(2, "0")}`;
 }
 
 function calculatePaces(vdot) {
