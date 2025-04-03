@@ -55,10 +55,16 @@ export default function PRInput({ setVdot, setEvent, setInputSeconds }) {
   };
 
   return (
-    <div>
-      <label>
-        Event:
-        <select value={event} onChange={(e) => updateEvent(e.target.value)}>
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Event:
+        </label>
+        <select
+          value={event}
+          onChange={(e) => updateEvent(e.target.value)}
+          className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2"
+        >
           <option value="800m">800m</option>
           <option value="1600m">1600m</option>
           <option value="3200m">3200m</option>
@@ -67,20 +73,29 @@ export default function PRInput({ setVdot, setEvent, setInputSeconds }) {
           <option value="Half Marathon">Half Marathon</option>
           <option value="Marathon">Marathon</option>
         </select>
-      </label>
-      <br />
-      <label>
-        PR (HH:MM:SS or MM:SS):
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          PR (HH:MM:SS or MM:SS):
+        </label>
         <input
           type="text"
           value={time}
           onChange={(e) => setTime(e.target.value)}
           placeholder="e.g. 2:30:00"
+          className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2"
         />
-      </label>
-      <br />
-      <button onClick={handleCalculate}>Calculate</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      </div>
+
+      <button
+        onClick={handleCalculate}
+        className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+      >
+        Calculate
+      </button>
+
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     </div>
   );
 }
