@@ -49,27 +49,35 @@ function VDOTTablePage() {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-semibold text-center mb-6 text-purple-700 dark:text-purple-300">Full VDOT Table</h2>
-      <div className="overflow-x-auto rounded-lg shadow-md">
+      <div className="overflow-x-auto rounded-xl shadow border border-gray-300 dark:border-gray-700">
         <table className="w-full table-auto border-collapse text-sm">
           <thead className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
             <tr>
-              <th className="text-center px-2 py-2">VDOT</th>
-              <th className="text-center px-2 py-2">800m</th>
-              <th className="text-center px-2 py-2">1600m</th>
-              <th className="text-center px-2 py-2">3200m</th>
-              <th className="text-center px-2 py-2">5K</th>
-              <th className="text-center px-2 py-2">10K</th>
-              <th className="text-center px-2 py-2">Half Marathon</th>
-              <th className="text-center px-2 py-2">Marathon</th>
-              <th className="text-center px-2 py-2">Tempo</th>
-              <th className="text-center px-2 py-2">Steady State</th>
-              <th className="text-center px-2 py-2">Easy Pace</th>
+              {[
+                "VDOT",
+                "800m",
+                "1600m",
+                "3200m",
+                "5K",
+                "10K",
+                "Half Marathon",
+                "Marathon",
+                "Tempo",
+                "Steady State",
+                "Easy Pace",
+              ].map((heading) => (
+                <th
+                  key={heading}
+                  className="text-center px-2 py-2 border border-gray-300 dark:border-gray-600"
+                >
+                  {heading}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {vdotList.map((v) => {
               const p = calculatePaces(v);
-
               const tempoSec = PACE_FORMULAS["Tempo"].factor * Math.pow(v, PACE_FORMULAS["Tempo"].exponent);
               const steadySec = PACE_FORMULAS["Steady State"].factor * Math.pow(v, PACE_FORMULAS["Steady State"].exponent);
               const halfMarathonTime = tempoSec * 13.1094;
@@ -78,19 +86,21 @@ function VDOTTablePage() {
               return (
                 <tr
                   key={v}
-                  className="text-center even:bg-gray-50 dark:even:bg-gray-900 hover:bg-purple-50 dark:hover:bg-gray-800 transition"
+                  className="even:bg-gray-50 dark:even:bg-gray-900 hover:bg-purple-50 dark:hover:bg-gray-800 transition"
                 >
-                  <td className="px-2 py-1">{v.toFixed(1)}</td>
-                  <td className="px-2 py-1">{p["800m"].time}</td>
-                  <td className="px-2 py-1">{p["1600m"].time}</td>
-                  <td className="px-2 py-1">{p["3200m"].time}</td>
-                  <td className="px-2 py-1">{p["5K"].time}</td>
-                  <td className="px-2 py-1">{p["10K"].time}</td>
-                  <td className="px-2 py-1">{formatTime(halfMarathonTime)}</td>
-                  <td className="px-2 py-1">{formatTime(marathonTime)}</td>
-                  <td className="px-2 py-1">{p["Tempo"].perMile}</td>
-                  <td className="px-2 py-1">{p["Steady State"].perMile}</td>
-                  <td className="px-2 py-1">{p["Easy Pace (Fast)"].perMile}–{p["Easy Pace (Slow)"].perMile}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{v.toFixed(1)}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["800m"].time}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["1600m"].time}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["3200m"].time}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["5K"].time}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["10K"].time}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{formatTime(halfMarathonTime)}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{formatTime(marathonTime)}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["Tempo"].perMile}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">{p["Steady State"].perMile}</td>
+                  <td className="px-2 py-1 text-center border border-gray-200 dark:border-gray-700">
+                    {p["Easy Pace (Fast)"].perMile}–{p["Easy Pace (Slow)"].perMile}
+                  </td>
                 </tr>
               );
             })}
