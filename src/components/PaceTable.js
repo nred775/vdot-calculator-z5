@@ -14,32 +14,41 @@ const PACE_FORMULAS = {
 };
 
 const getRowClass = (label) => {
-    const styles = {
-      "1600m": "bg-[#4ade80] dark:bg-purple-900/40",        // Green
-      "3200m": "bg-[#4ade80] dark:bg-purple-900/40",
-      "5K":     "bg-[#4ade80] dark:bg-purple-900/40",
-  
-      "10K":    "bg-[#fde047] dark:bg-indigo-900/40",       // Bright Yellow
-      "Tempo":  "bg-[#facc15] dark:bg-blue-900/40",         // Golden Yellow
-      "Steady State": "bg-[#86efac] dark:bg-cyan-900/40",   // Mint
-  
-      "Half Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",  // Sky Blue
-      "Marathon":      "bg-[#38bdf8] dark:bg-teal-900/40",
-  
-      "Wheel":    "bg-[#a78bfa] dark:bg-emerald-900/40",    // Lavender Purple
-      "Distance": "bg-[#f9a8d4] dark:bg-gray-800/40",       // Pink
-    };
-    return styles[label] || "";
+  const styles = {
+    "1600m": "bg-[#4ade80] dark:bg-purple-900/40",
+    "3200m": "bg-[#4ade80] dark:bg-purple-900/40",
+    "5K": "bg-[#4ade80] dark:bg-purple-900/40",
+    "10K": "bg-[#fde047] dark:bg-indigo-900/40",
+    "Tempo": "bg-[#facc15] dark:bg-blue-900/40",
+    "Steady State": "bg-[#86efac] dark:bg-cyan-900/40",
+    "Half Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",
+    "Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",
+    "Wheel": "bg-[#a78bfa] dark:bg-emerald-900/40",
+    "Distance": "bg-[#f9a8d4] dark:bg-gray-800/40",
   };
+  return styles[label] || "";
+};
 
 function formatTime(seconds) {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = Math.round(seconds % 60);
+  seconds = Math.round(seconds);
+  let hrs = Math.floor(seconds / 3600);
+  let mins = Math.floor((seconds % 3600) / 60);
+  let secs = seconds % 60;
+
+  if (secs === 60) {
+    secs = 0;
+    mins += 1;
+  }
+  if (mins === 60) {
+    mins = 0;
+    hrs += 1;
+  }
+
   return hrs > 0
     ? `${hrs}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     : `${mins}:${secs.toString().padStart(2, "0")}`;
 }
+
 
 function get400mSplit(pacePerMileSec) {
   const metersPerMile = 1609.34;
@@ -92,7 +101,7 @@ export default function PaceTable({ vdot, event, inputTime }) {
   const tempoPerMile = PACE_FORMULAS["Tempo"].factor * Math.pow(vdot, PACE_FORMULAS["Tempo"].exponent);
   const steadyPerMile = PACE_FORMULAS["Steady State"].factor * Math.pow(vdot, PACE_FORMULAS["Steady State"].exponent);
 
-  const addSpecialRow = (label, inputTime, distanceMiles, perMileDefault, paceLabel) => {
+  const addSpecialRow = (label, inputTime, distanceMiles, perMileDefault) => {
     let totalSec = inputTime || perMileDefault * distanceMiles;
     const perMile = inputTime ? inputTime / distanceMiles : perMileDefault;
     const perKm = perMile / 1.60934;
@@ -109,15 +118,15 @@ export default function PaceTable({ vdot, event, inputTime }) {
       >
         <td className="px-2 py-1 text-left">{label}</td>
         <td className="px-2 py-1 text-center">{formatTime(totalSec)}</td>
-        <td className="px-2 py-1 text-center">{formatTime(perMile)} / mile ({paceLabel})</td>
+        <td className="px-2 py-1 text-center">{formatTime(perMile)} / mile</td>
         <td className="px-2 py-1 text-center">{formatTime(perKm)} / km</td>
         <td className="px-2 py-1 text-center">{split400}</td>
       </motion.tr>
     );
   };
 
-  addSpecialRow("Half Marathon", event === "Half Marathon" ? inputTime : null, 13.1094, tempoPerMile, "tempo");
-  addSpecialRow("Marathon", event === "Marathon" ? inputTime : null, 26.2188, steadyPerMile, "steady state");
+  addSpecialRow("Half Marathon", event === "Half Marathon" ? inputTime : null, 13.1094, tempoPerMile);
+  addSpecialRow("Marathon", event === "Marathon" ? inputTime : null, 26.2188, steadyPerMile);
 
   const wheelPerMile = PACE_FORMULAS["Wheel"].factor * Math.pow(vdot, PACE_FORMULAS["Wheel"].exponent);
   const wheelPerKm = wheelPerMile / 1.60934;

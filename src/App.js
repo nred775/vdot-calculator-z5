@@ -4,7 +4,7 @@ import PRInput from "./components/PRInput";
 import PaceTable from "./components/PaceTable";
 import VDOTTablePage from "./components/VDOTTablePage";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Moon } from "lucide-react"; // 🌞🌙 icons!
+import { Sun, Moon } from "lucide-react"; 
 
 function App() {
   const [vdot, setVdot] = useState(null);

@@ -17,28 +17,40 @@ const PACE_FORMULAS = {
 
 const getRowClass = (label) => {
   const styles = {
-    "1600m": "bg-[#4ade80] dark:bg-purple-900/40",        // Green
+    "1600m": "bg-[#4ade80] dark:bg-purple-900/40",       
     "3200m": "bg-[#4ade80] dark:bg-purple-900/40",
     "5K": "bg-[#4ade80] dark:bg-purple-900/40",
-    "10K": "bg-[#fde047] dark:bg-indigo-900/40",          // Yellow
-    "Tempo": "bg-[#facc15] dark:bg-blue-900/40",          // Golden
-    "Steady State": "bg-[#86efac] dark:bg-cyan-900/40",   // Mint
-    "Half Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",  // Sky Blue
+    "10K": "bg-[#fde047] dark:bg-indigo-900/40",          
+    "Tempo": "bg-[#facc15] dark:bg-blue-900/40",         
+    "Steady State": "bg-[#86efac] dark:bg-cyan-900/40",   
+    "Half Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",  
     "Marathon": "bg-[#38bdf8] dark:bg-teal-900/40",
-    "Wheel": "bg-[#a78bfa] dark:bg-emerald-900/40",       // Lavender
-    "Distance": "bg-[#f9a8d4] dark:bg-gray-800/40",       // Pink
+    "Wheel": "bg-[#a78bfa] dark:bg-emerald-900/40",      
+    "Distance": "bg-[#f9a8d4] dark:bg-gray-800/40",      
   };
   return styles[label] || "";
 };
 
 function formatTime(seconds) {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = Math.round(seconds % 60);
+  seconds = Math.round(seconds);
+  let hrs = Math.floor(seconds / 3600);
+  let mins = Math.floor((seconds % 3600) / 60);
+  let secs = seconds % 60;
+
+  if (secs === 60) {
+    secs = 0;
+    mins += 1;
+  }
+  if (mins === 60) {
+    mins = 0;
+    hrs += 1;
+  }
+
   return hrs > 0
     ? `${hrs}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     : `${mins}:${secs.toString().padStart(2, "0")}`;
 }
+
 
 function calculatePaces(vdot) {
   const paces = {};
@@ -66,7 +78,7 @@ function calculatePaces(vdot) {
 
 function VDOTTablePage() {
   const vdotList = [];
-  for (let v = 75.0; v >= 30.0; v -= 0.1) {
+  for (let v = 85.0; v >= 30.0; v -= 0.1) {
     vdotList.push(Number(v.toFixed(1)));
   }
 
@@ -137,8 +149,7 @@ function VDOTTablePage() {
         <table className="w-full table-auto border-collapse text-sm">
           <thead className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 sticky top-0 z-10 shadow-md">
             <tr>
-              {[
-                "VDOT", "1600m", "3200m", "5K", "10K",
+              {["VDOT", "1600m", "3200m", "5K", "10K",
                 "Half Marathon", "Marathon",
                 "Tempo (mi)", "Tempo (km)",
                 "Steady (mi)", "Steady (km)",
