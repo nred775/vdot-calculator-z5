@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PRInput from "./components/PRInput";
 import PaceTable from "./components/PaceTable";
 import VDOTTablePage from "./components/VDOTTablePage";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon } from "lucide-react"; // 🌞🌙 icons!
 
 function App() {
   const [vdot, setVdot] = useState(null);
@@ -11,7 +13,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
+    document.documentElement.classList.toggle("dark", isDarkMode);
   }, [isDarkMode]);
 
   return (
@@ -24,9 +26,14 @@ function App() {
             <Link to="/table" className="text-purple-500 dark:text-purple-300 hover:underline">VDOT Table</Link>
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="ml-4 px-3 py-1 border rounded text-sm border-purple-500 text-purple-500 dark:border-purple-300 dark:text-purple-300"
+              className="ml-4 p-2 rounded-full border border-purple-500 dark:border-purple-300 hover:bg-purple-100 dark:hover:bg-gray-700 transition"
+              title="Toggle Dark Mode"
             >
-              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-purple-300" />
+              ) : (
+                <Moon className="w-5 h-5 text-purple-500" />
+              )}
             </button>
           </div>
         </nav>
@@ -41,18 +48,27 @@ function App() {
                   setEvent={setEvent}
                   setInputSeconds={setInputSeconds}
                 />
-                {vdot !== null && (
-                  <div className="mt-6">
-                    <p className="text-lg text-center text-purple-600 dark:text-purple-300 font-semibold mb-4">
-                      Calculated VDOT: {vdot}
-                    </p>
-                    <PaceTable
-                      vdot={vdot}
-                      event={event}
-                      inputTime={inputSeconds}
-                    />
-                  </div>
-                )}
+                <AnimatePresence>
+                  {vdot !== null && (
+                    <motion.div
+                      key="vdot-result"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="mt-6"
+                    >
+                      <p className="text-lg text-center text-purple-600 dark:text-purple-300 font-semibold mb-4">
+                        Calculated VDOT: {vdot}
+                      </p>
+                      <PaceTable
+                        vdot={vdot}
+                        event={event}
+                        inputTime={inputSeconds}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             }
           />
